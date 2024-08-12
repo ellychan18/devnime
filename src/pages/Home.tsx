@@ -5,7 +5,7 @@ import { MainDataInterface } from "../interfaces";
 import { getQuery, online } from "../utils";
 
 const Home = () => {
-   const [data, setData] = useState<MainDataInterface | null>(null);
+   const [data, setData] = useState<{ onGoing: MainDataInterface[] } | null>(null); // Sesuaikan tipe data
    const [isLoading, setIsLoading] = useState<boolean>(false);
    const [error, setError] = useState<any>(null);
    const [refresh, setRefresh] = useState<number>(0);
@@ -31,19 +31,19 @@ const Home = () => {
             const result = await response.json();
 
             setIsLoading(false);
-            setData(result.data); // Pastikan `result.data` sesuai dengan struktur respons API
+            setData(result.data); // Data diakses dari `result.data`
          } catch (err: any) {
             setIsLoading(false);
             setError(err);
          }
       })();
-   }, [page, refresh]); // `page` dan `refresh` sebagai dependency
+   }, [page, refresh]);
 
    return (
       <MainLayout>
          <span ref={top}></span>
          <Header route="🏠 Home" message="terbaru" />
-         <Card data={data} isLoading={isLoading} error={error} />
+         <Card data={data?.onGoing} isLoading={isLoading} error={error} />
       </MainLayout>
    );
 };
