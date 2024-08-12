@@ -12,7 +12,7 @@ const Anime = () => {
 
    const top = useRef<HTMLSpanElement>(null);
    const page = getQuery("page");
-   const URL = `${import.meta.env.VITE_BASE_URL}/anime?page=${page || 1}`;
+   const URL = `${import.meta.env.VITE_BASE_URL}/otakudesu/${page || 1}`;
 
    useEffect(() => {
       (async () => {
