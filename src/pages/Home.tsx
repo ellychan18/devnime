@@ -8,7 +8,10 @@ const Home = () => {
    const [data, setData] = useState<MainDataInterface | null>(null);
    const [isLoading, setIsLoading] = useState<boolean>(false);
    const [error, setError] = useState<any>(null);
+   const [refresh, setRefresh] = useState<number>(0);
+
    const top = useRef<HTMLSpanElement>(null);
+   const page = getQuery("page");
    const URL = `${import.meta.env.VITE_BASE_URL}/otakudesu/home`;
 
    useEffect(() => {
@@ -27,19 +30,14 @@ const Home = () => {
             const response = await fetch(URL);
             const result = await response.json();
 
-            if (result.statusCode === 200) {
-               setData(result.data);
-            } else {
-               throw new Error(result.statusMessage);
-            }
-
             setIsLoading(false);
+            setData(result.data); // Akses data dari respons API
          } catch (err: any) {
             setIsLoading(false);
             setError(err);
          }
       })();
-   }, []); // Menghapus dependency jika tidak dibutuhkan
+   }, [page, refresh]);
 
    return (
       <MainLayout>
