@@ -2,16 +2,14 @@ import MainLayout from "../layouts/MainLayout";
 import { useEffect, useRef, useState } from "react";
 import { Header, Card } from "../components";
 import { MainDataInterface } from "../interfaces";
-import { getQuery, online } from "../utils";
+import { online } from "../utils"; // Hapus getQuery jika tidak digunakan
 
 const Home = () => {
    const [data, setData] = useState<MainDataInterface | null>(null);
    const [isLoading, setIsLoading] = useState<boolean>(false);
    const [error, setError] = useState<any>(null);
-   const [refresh, setRefresh] = useState<number>(0);
 
    const top = useRef<HTMLSpanElement>(null);
-   const page = getQuery("page");
    const URL = `${import.meta.env.VITE_BASE_URL}/otakudesu/home`;
 
    useEffect(() => {
@@ -23,7 +21,7 @@ const Home = () => {
          });
 
          document.title = "Wajik Streaming | Home";
-         online(setRefresh, setError);
+         online(setError); // Hapus setRefresh jika tidak digunakan
          setIsLoading(true);
 
          try {
@@ -37,7 +35,7 @@ const Home = () => {
             setError(err);
          }
       })();
-   }, [page, refresh]);
+   }, []); // Hapus page dan refresh jika tidak diperlukan
 
    return (
       <MainLayout>
