@@ -12,7 +12,7 @@ const Home = () => {
 
    const top = useRef<HTMLSpanElement>(null);
    const page = getQuery("page");
-   const URL = `${import.meta.env.VITE_BASE_URL}/home?page=${page || 1}`;
+   const URL = `${import.meta.env.VITE_BASE_URL}/otakudesu/home}`;
 
    useEffect(() => {
       (async () => {
