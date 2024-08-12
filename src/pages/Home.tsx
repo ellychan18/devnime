@@ -2,15 +2,17 @@ import MainLayout from "../layouts/MainLayout";
 import { useEffect, useRef, useState } from "react";
 import { Header, Card } from "../components";
 import { MainDataInterface } from "../interfaces";
-import { online } from "../utils"; // Hapus getQuery jika tidak digunakan
+import { getQuery, online } from "../utils";
 
 const Home = () => {
    const [data, setData] = useState<MainDataInterface | null>(null);
    const [isLoading, setIsLoading] = useState<boolean>(false);
    const [error, setError] = useState<any>(null);
+   const [refresh, setRefresh] = useState<number>(0);
 
    const top = useRef<HTMLSpanElement>(null);
-   const URL = `${import.meta.env.VITE_BASE_URL}/otakudesu/home`;
+   const page = getQuery("page");
+   const URL = `${import.meta.env.VITE_BASE_URL}/otakudesu/home?page=${page || 1}`;
 
    useEffect(() => {
       (async () => {
@@ -21,7 +23,7 @@ const Home = () => {
          });
 
          document.title = "Wajik Streaming | Home";
-         online(setError); // Hapus setRefresh jika tidak digunakan
+         online(setRefresh, setError);
          setIsLoading(true);
 
          try {
@@ -29,13 +31,13 @@ const Home = () => {
             const result = await response.json();
 
             setIsLoading(false);
-            setData(result.data); // Akses data dari respons API
+            setData(result.data); // Pastikan `result.data` sesuai dengan struktur respons API
          } catch (err: any) {
             setIsLoading(false);
             setError(err);
          }
       })();
-   }, []); // Hapus page dan refresh jika tidak diperlukan
+   }, [page, refresh]); // `page` dan `refresh` sebagai dependency
 
    return (
       <MainLayout>
