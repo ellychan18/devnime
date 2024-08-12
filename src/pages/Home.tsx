@@ -5,7 +5,7 @@ import { MainDataInterface } from "../interfaces";
 import { getQuery, online } from "../utils";
 
 const Home = () => {
-   const [data, setData] = useState<{ onGoing: MainDataInterface[] } | null>(null);
+   const [data, setData] = useState<MainDataInterface | null>(null); // Ubah ke MainDataInterface
    const [isLoading, setIsLoading] = useState<boolean>(false);
    const [error, setError] = useState<any>(null);
    const [refresh, setRefresh] = useState<number>(0);
@@ -31,7 +31,18 @@ const Home = () => {
             const result = await response.json();
 
             setIsLoading(false);
-            setData(result.data); // Menetapkan data yang diakses dari result.data
+
+            // Menyesuaikan format data agar sesuai dengan MainDataInterface
+            const formattedData: MainDataInterface = {
+               statusCode: result.statusCode,
+               statusMessage: result.statusMessage,
+               message: result.message,
+               currentPage: page || 1,
+               maxPage: result.maxPage, // Pastikan hasil API menyediakan maxPage
+               list: result.data.onGoing // Sesuaikan dengan format yang diharapkan
+            };
+
+            setData(formattedData);
          } catch (err: any) {
             setIsLoading(false);
             setError(err);
@@ -39,14 +50,11 @@ const Home = () => {
       })();
    }, [page, refresh]);
 
-   // Menyaring data untuk diteruskan ke Card jika data ada
-   const ongoingData = data?.onGoing || null;
-
    return (
       <MainLayout>
          <span ref={top}></span>
          <Header route="🏠 Home" message="terbaru" />
-         <Card data={ongoingData} isLoading={isLoading} error={error} />
+         <Card data={data} isLoading={isLoading} error={error} />
       </MainLayout>
    );
 };
